@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset=utf-8 />
+  <title>Average Rent Map in the U.S.</title>
+  <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+  integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+  crossorigin=""/>
+  <link href='http://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
+
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: rgb(114, 109, 109);
+      font-family: Lato, sans-serif;
+      color: #ddd;
+    }
+
+    header {
+      width: 80%;
+      margin: 10px auto 10px auto;
+    }
+
+    section {
+      width: 80%;
+      margin: 5px auto;
+    }
+    
+    h1 {
+      display: inline-block;
+      margin-right: 20px;
+      color: whitesmoke;
+    }
+
+    /* h2 {
+      display: inline-block;
+      color:whitesmoke;
+    } */
+
+    /* I like this style. */
+    h2 {
+      display: inline-block;
+      color: whitesmoke;
+      letter-spacing: 0.05em;
+      margin-top: 0px;
+      font-weight: 300;
+      text-transform: uppercase;
+      border-bottom: 1px dotted rgba(255, 200, 0, 0.5);
+      text-shadow: 0 0 30px #fdcc8a, 0 0 40px #fdcc8a, 0 0 50px #fdcc8a, 0 0 80px #fdcc8a;
+      ;
+    }
+
+    #map {
+      width: 80%;
+      height: 540px;
+      margin: 10px 10%;
+      background: rgba(63, 63, 63, 0.9); /*Transparency*/
+      border: 2px solid #dddedf;
+    }
+
+    footer {
+      /* padding: 6px 10%;
+      width: 80%; */
+      width: 80%;
+      margin: 10px auto 10px auto;
+    }
+
+    p {
+      font-size: 1em;
+      color:whitesmoke;
+    }
+
+    .legend {
+      padding: 6px 8px;
+      font-size: 1em;
+      border: 2px solid rgba(244,2 244, 244, 0.2);
+      /* background: rgba(255,255,255,0.8); */
+      background: rgba(100,100,100,0.9);
+      color: rgba(244,244,244,0.8);
+      /* box-shadow: 0 0 15px rgba(0,0,0,0.2); */
+      border-radius: 5px;
+    }
+    
+    .legend h3 {
+      font-size: 1.2em;
+      font-weight: normal;
+      color: rgba(244,244,244,0.8);
+      margin: 0 0 10px 0;
+    }
+
+    .legend span {
+      width: 20px;
+      height: 20px;
+      float: left;
+      margin: 0 10px 4px 0;
+    }
+
+    .legend label {
+      font-size: 1.1em;
+    }
+
+    .legend label:after {
+      content: '';
+      display: block;
+      clear: both;
+    }
+
+    .leaflet-bar a {
+      /* Override the default style for Leaflet's zoom  */
+      background: rgba(100, 100, 100, 0.9);
+      color: rgba(244, 244, 244, 0.8);
+    }
+
+    #info-button {
+      padding: 8px 5px;
+      font-size: 0.9em;
+      font-weight: bolder;
+      /* Style matches Leaflet controls */
+      border: 2px solid rgba(244, 244, 244, 0.2);
+      background: rgba(100, 100, 100, 0.9);
+      color: rgba(244, 244, 244, 0.8);
+      border-radius: 5px;
+      /* Position is fixed next to the zoom bar */
+      position: fixed;
+      top: 11px;
+      right: 52px;
+      /* Draw it on top of all elements */
+      z-index: 9999;
+      /* Cursor change on hover -- doesn't work on touch screensn */
+      cursor: pointer;
+    }
+
+    /* #footer { */
+      /* width: 100%; */
+      /* background: rgba(95, 95, 95, 0.8); */
+      /* color: whitesmoke; */
+      /* box-shadow: 0 0 15px rgba(0, 0, 0, 0.2); */
+      /* height: 0px; */
+      /* padding: 0px; */
+      /* display below the button to allow clicking if overlay covers screen */
+      /* z-index: 9000; */
+      /* position: absolute; */
+      /* 
+      Hide the footer be default. This should not contain too much information. Like to a new page for extended content.
+      */
+      /* bottom: -10px; */
+      /* If too much is included, enable scroll */
+      /* overflow: scroll; */
+    /* } */
+
+    #footer div {
+      padding: 10px;
+    }
+
+    #footer h1 {
+      font-size: 1.3em;
+      margin: 0 0 5px 0;
+    }
+
+    .footer-img {
+      float: right;
+      height: 10vh;
+      margin: 10px;
+    }
+
+  </style>
+</head>
+
+<body>
+  
+  <header>
+    <h1>Map Title</h1>
+    <h2>Map Subtitle</h2>
+  </header>
+
+  <div id='map'></div>
+  <!-- <button id="info-button" onclick="myInfo()">Information</button> -->
+  <section>
+    <div id='footer'>
+      <div><img src="https://uky-gis.github.io/graphics/logo-color-400px.png" class="footer-img">
+          <h1></h1>
+          <p>
+            <ul>
+              <li>Data obtained through the American Fact Finder (<a href="http://factfinder.census.gov/">factfinder.census.gov</a>)</li>
+              <li>US County Polygons (<a href="https://www.census.gov/geographies/mapping-files/time-series/geo/carto-boundary-file.html">US Census</a>)</li>
+            </ul>
+          </p>
+          <p>
+            Map authored by Hoyeon Jeong (<a href="https://github.com/HoyeonJeong">My Profile on Github</a>)
+          </p>
+      </div>
+    </div>
+  </section>
+  <!-- Load scripts using Subresource Integrity (SRI) is a security feature 
+      that enables browsers to verify that resources they fetch (from a CDN) 
+      are delivered without unexpected manipulation. -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+    integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+    crossorigin=""></script>
+  <script src='https://unpkg.com/simple-statistics@7.6.0/dist/simple-statistics.min.js'>
+  </script>
+  
+  <script>
+
+  $("h1").html("Soil Quality Status in Kentucky") //Change h1
+
+  //Map option
+  var options={
+    center: [37.8, -85.8],
+    zoomSnap: .1,
+    zoomControl: false
+  }
+
+  //Load Map
+  var map=L.map('map', options);
+  map.addControl(L.control.zoom({position: 'topright'})); //Zoom controller
+
+  //Draw data to the map
+  var countyLayer=$.getJSON("data/soil.json", function (data) {
+    var dataLayer=L.geoJson(data, {
+      style: function (feature) {
+        return {
+          color: '#444',
+          weight: 1,
+          fillOpacity: 1,
+          fillColor: '#1f78b4'
+        };
+      },
+      onEachFeature: function (feature, layer) {
+        var props=feature.properties;
+
+      }
+    })
+  })
+
+
+    
+  </script>
+
+</body>
+
+</html>

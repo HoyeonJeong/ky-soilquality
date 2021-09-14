@@ -1,4 +1,20 @@
 drop table if exists
+	hemp_project.soilq;
+create table
+	hemp_project.soilq
+as
+select
+hemp_project.soil.id,
+cast(hemp_project.soil.fips as varchar),
+hemp_project.soil.avg_rate,
+hemp_project.soil.acres,
+hemp_project.soil.weight_rate,
+hemp_project.soil.sd_rate
+
+from
+	hemp_project.soil;
+	
+drop table if exists
 	hemp_project.soilquality;
 create table
 	hemp_project.soilquality
