@@ -5,7 +5,6 @@
   <meta charset=utf-8 />
   <title>Average Rent Map in the U.S.</title>
   <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
-
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
   integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
   crossorigin=""/>
@@ -36,12 +35,6 @@
       color: whitesmoke;
     }
 
-    /* h2 {
-      display: inline-block;
-      color:whitesmoke;
-    } */
-
-    /* I like this style. */
     h2 {
       display: inline-block;
       color: whitesmoke;
@@ -55,11 +48,11 @@
     }
 
     #map {
-      width: 80%;
-      height: 540px;
-      margin: 10px 10%;
-      background: rgba(63, 63, 63, 0.9); /*Transparency*/
-      border: 2px solid #dddedf;
+      width: 100%;
+      height: 640px;
+      margin: 5% auto;
+      background:rgb(114, 109, 109);
+      border: 2px solid #d3d3d3;
     }
 
     footer {
@@ -71,7 +64,7 @@
 
     p {
       font-size: 1em;
-      color:whitesmoke;
+      color:rgb(0,0,0,1);
     }
 
     .legend {
@@ -114,6 +107,9 @@
       background: rgba(100, 100, 100, 0.9);
       color: rgba(244, 244, 244, 0.8);
     }
+    #info p {
+        margin: 0px 0px 0px 20px;
+      }
 
     #info-button {
       padding: 8px 5px;
@@ -166,7 +162,32 @@
       height: 10vh;
       margin: 10px;
     }
+    /* Use float property to make two-column layout */
+    .first-column {
+      float: left;
+      width: 49%;
+      padding-right: 2%;
+    }
 
+    .second-column {
+      float: left;
+      width: 49%;
+    }
+
+    /* Clear floats after the columns */
+    .row::after {
+      content: "";
+      display: block;
+      clear: both;
+    }
+
+    /* When browser is 900px wide or less */
+    @media screen and (max-width: 900px) {
+      .first-column,
+      .second-column {
+        width: 100%
+      }
+    }
   </style>
 </head>
 
@@ -176,34 +197,27 @@
     <h1>Map Title</h1>
     <h2>Map Subtitle</h2>
   </header>
-
-  <div id='map'></div>
-  <!-- <button id="info-button" onclick="myInfo()">Information</button> -->
   <section>
-    <div id='footer'>
-      <div><img src="https://uky-gis.github.io/graphics/logo-color-400px.png" class="footer-img">
-          <h1></h1>
-          <p>
-            <ul>
-              <li>Data obtained through the American Fact Finder (<a href="http://factfinder.census.gov/">factfinder.census.gov</a>)</li>
-              <li>US County Polygons (<a href="https://www.census.gov/geographies/mapping-files/time-series/geo/carto-boundary-file.html">US Census</a>)</li>
-            </ul>
-          </p>
-          <p>
-            Map authored by Hoyeon Jeong (<a href="https://github.com/HoyeonJeong">My Profile on Github</a>)
-          </p>
-      </div>
+  <div class="row">
+  <div id='map'></div>
+  </div>
+  <div class="first-column">
+    <div id="info">
+
     </div>
-  </section>
+  </div>
+  <div class="second-column">
+  </div>
+
+</section>
   <!-- Load scripts using Subresource Integrity (SRI) is a security feature 
       that enables browsers to verify that resources they fetch (from a CDN) 
       are delivered without unexpected manipulation. -->
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
-  <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
-    integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
-    crossorigin=""></script>
-  <script src='https://unpkg.com/simple-statistics@7.6.0/dist/simple-statistics.min.js'>
-  </script>
+      <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+      <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==" crossorigin=""></script>
+      <!-- Stats Library -->
+      <script src="https://unpkg.com/simple-statistics@7.6.0/dist/simple-statistics.min.js"></script>
+      
   
   <script>
 
@@ -212,9 +226,12 @@
   //Map option
   var options={
     center: [37.8, -85.8],
+    zoom: 7.4,
     zoomSnap: .1,
     zoomControl: false
   }
+
+  var info = document.querySelector('#info'); //info division
 
   //Load Map
   var map=L.map('map', options);
@@ -233,12 +250,101 @@
       },
       onEachFeature: function (feature, layer) {
         var props=feature.properties;
-
+        var popup=`<p><b>${props.name} county</b></p> 
+        Weighted Average Rate:${props["weight_rate"]} rate <br>
+        Stadard Deviation: ${props["sd_rate"]}`
+        if (L.Browser.mobile) {
+            layer.bindPopup(popup);
+          } else {
+            layer.bindTooltip(popup, {
+              sticky: true
+            });
+          }
       }
     })
-  })
+    dataLayer.addTo(map);
+    drawMap(dataLayer);
+  });
 
+  $.when(countyLayer).done(function () { //State border line
+      $.getJSON("data/us_states_500k.geojson", function (data) {
+        var stateLayer=L.geoJson(data, {
+          style: function (feature) {
+            return {
+              color: '#222',
+              weight: 2,
+              fillOpacity: 0,
+              interactive: false
+            };
+          },
+          filter: function (feature) {
+            if (feature.properties.NAME=="Kentucky") {
+              return feature;
+            }
+          }
+        });
+        stateLayer.addTo(map);
+      });
+    });
 
+  //Draw map
+  function drawMap(dataLayer) {
+    var breaks=getClassBreaks(dataLayer);
+    dataLayer.eachLayer(function (layer) {
+      var props=layer.feature.properties;
+      layer.setStyle({
+        fillColor: getColor(props["weight_rate"], breaks)
+      });
+    });
+    drawLegend(breaks);
+  }
+
+  //Define breaks
+  function getClassBreaks(dataLayer) {
+    var values=[];
+    dataLayer.eachLayer(function (layer) {
+      var props=layer.feature.properties;
+      if (props["weight_rate"]!=null) {
+        var value=props["weight_rate"];
+        values.push(value);
+      }
+    });
+    var clusters=ss.ckmeans(values, 5);
+    var breaks=clusters.map(function (cluster) {
+      return [cluster[0], cluster.pop()];
+    });
+    return breaks;
+  }
+
+  function getColor(d, breaks) {
+          if (d<=(breaks[0][1])) {
+            return '#a6611a';
+          } else if (d<=(breaks[1][1])) {
+            return '#dfc27d';
+          } else if (d<=(breaks[2][1])) {
+            return '#f4a582';
+          } else if (d<=(breaks[3][1])) {
+            return '#bababa';
+          } else if (d<=(breaks[4][1])) {
+            return '#404040'
+          }
+        };
+  
+  function drawLegend(breaks) {
+    var legend=L.control({position: 'topleft'});
+    legend.onAdd=function () {
+      var div=L.DomUtil.create('div', 'legend');
+      div.innerHTML="<h3>Soil Quality</h3>"
+      for (var i=0; i<breaks.length; i++) {
+        var color=getColor(breaks[i][0], breaks);
+        div.innerHTML+=`<span style="background:${color}"></span>
+                <label>${(breaks[i][0]).toLocaleString()}&mdash;
+                ${(breaks[i][1]).toLocaleString()}</label>`;
+      }
+      return div;
+    }
+    legend.addTo(map);
+  }
     
   </script>
 
