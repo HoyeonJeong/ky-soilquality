@@ -67,6 +67,19 @@
       color:rgb(0,0,0,1);
     }
 
+    ul {
+      font-family: 'Open Sans', sans-serif;
+      font-weight: 300;
+      padding: 0px 20px 4px 20px;
+      font-size: 1.1em;
+      line-height: 1.2em;
+      color: whitesmoke;
+    }
+
+    li {
+      margin: 10px 0;
+    }
+
     .legend {
       padding: 6px 8px;
       font-size: 1em;
@@ -107,6 +120,7 @@
       background: rgba(100, 100, 100, 0.9);
       color: rgba(244, 244, 244, 0.8);
     }
+
     #info p {
         margin: 0px 0px 0px 20px;
       }
@@ -130,26 +144,25 @@
       cursor: pointer;
     }
 
-    /* #footer { */
-      /* width: 100%; */
-      /* background: rgba(95, 95, 95, 0.8); */
-      /* color: whitesmoke; */
-      /* box-shadow: 0 0 15px rgba(0, 0, 0, 0.2); */
-      /* height: 0px; */
-      /* padding: 0px; */
+    #footer {
+      width: auto;
+      background: rgba(95, 95, 95, 0.8);
+      color: whitesmoke;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+      height: 0px;
+      padding: 0px;
       /* display below the button to allow clicking if overlay covers screen */
-      /* z-index: 9000; */
-      /* position: absolute; */
-      /* 
-      Hide the footer be default. This should not contain too much information. Like to a new page for extended content.
-      */
-      /* bottom: -10px; */
+      z-index: 9000;
+      position: absolute; 
+      /* Hide the footer be default. This should not contain too much information. Like to a new page for extended content. */
+      bottom: -10px;
       /* If too much is included, enable scroll */
-      /* overflow: scroll; */
-    /* } */
+      overflow: auto;
+    }
 
     #footer div {
       padding: 10px;
+      width: 100%;
     }
 
     #footer h1 {
@@ -162,6 +175,7 @@
       height: 10vh;
       margin: 10px;
     }
+
     /* Use float property to make two-column layout */
     .first-column {
       float: left;
@@ -192,7 +206,6 @@
 </head>
 
 <body>
-  
   <header>
     <h1>Map Title</h1>
     <h2>Map Subtitle</h2>
@@ -200,15 +213,32 @@
   <section>
   <div class="row">
   <div id='map'></div>
+  <button id="info-button" onclick="myInfo()">Soil Meta Information</button>
   </div>
   <div class="first-column">
-    <div id="info">
-
-    </div>
+    <p>
+    </p>
   </div>
   <div class="second-column">
+    <P>
+      <div id="info">
+      </div>
+    </P>
   </div>
-
+  <div id='footer'>
+    <div>
+      <ul>Soil Class (USDA NRCS Definition)
+        <li>Class 1: Soils have few limitations that restrict their use.</li>
+        <li>Class 2: Soils have moderate limitations that reduce the choice of plants or that require moderate conservation practices.</li>
+        <li>Class 3: Soils have severe limitations that reduce the choice of plants or that require special conservation practices, or both.</li>
+        <li>Class 4: Soils have very severe limitations that reduce the choice of plants or that require very careful management, or both.</li>
+        <li>Class 5: Soils are subject to little or no erosion but have other limitations, impractical to remove, that restrict their use mainly to pasture, rangeland, forestland, or wildlife habitat.</li>
+        <li>Class 6: Soils have severe limitations that make them generally unsuitable for cultivation and that restrict their use mainly to pasture, rangeland, forestland, or wildlife habitat.</li>
+        <li>Class 7: Soils have very severe limitations that make them unsuitable for cultivation and that restrict their use mainly to grazing, forestland, or wildlife habitat.</li>
+        <li>Class 8: Soils and miscellaneous areas have limitations that preclude commercial plant production and that restrict their use to recreational purposes, wildlife habitat, watershed, or esthetic purposes.</li>
+      </ul>
+    </div>
+</div>
 </section>
   <!-- Load scripts using Subresource Integrity (SRI) is a security feature 
       that enables browsers to verify that resources they fetch (from a CDN) 
@@ -222,6 +252,7 @@
   <script>
 
   $("h1").html("Soil Quality Status in Kentucky") //Change h1
+  $("h2").html("Health Soil, Health Crops") //Change h1
 
   //Map option
   var options={
@@ -346,6 +377,19 @@
     legend.addTo(map);
   }
     
+    var clicked=false
+    function myInfo() {
+      var x=document.getElementById('footer');
+      var y=document.getElementById('info-button');
+      if (clicked) {
+        y.style.background='rgba(100,100,100,0.9)';
+        x.style.height='0px';
+      } else {
+        y.style.background='rgba(146,239,146,0.8)';
+        x.style.height='33vh';
+      }
+      clicked=!clicked
+    }
   </script>
 
 </body>
