@@ -31,12 +31,13 @@
 
     h2 {
       display: inline-block;
-      color: rgba(255, 174, 0, 0.8);
+      color: rgba(87, 88, 84, 0.815);
       letter-spacing: 0.05em;
       margin-top: 0px;
-      font-weight: 300;
+      font-size: 1.75em;
+      font-weight: 400;
       border-bottom: 1px dotted rgba(255, 200, 0, 0.5);
-      text-shadow: 0 0 30px #42b300, 0 0 40px #42b300, 0 0 50px #42b300, 0 0 80px #a1b300;
+      text-shadow: 0 0 30px #9abb3f, 0 0 40px #9abb3f, 0 0 50px #9abb3f, 0 0 80px #9abb3f;
       ;
     }
 
@@ -66,7 +67,6 @@
       padding: 10px;
       grid-row: 1 / 3;
       grid-column: 2 / 3;
-
     }
 
     .legend {
@@ -134,14 +134,44 @@
     ul {
       font-family: 'Open Sans', sans-serif;
       font-weight: 300;
-      padding: 0px 20px 4px 20px;
-      font-size: 1.1em;
+      padding: 0px 10px 4px 20px;
+      font-size: 1.2em;
       line-height: 1.2em;
       color: #63666a;
     }
 
     li {
       margin: 10px 0;
+    }
+
+    .caption {
+      margin: 0 0 20px 0;
+      display: block;
+    }
+
+    .img-fill {
+      width: 100%;
+      height: auto;
+      margin: 10px 0px;
+    }
+
+        /* Use float property to make two-column layout */
+    .first-column {
+      float: left;
+      width: 49%;
+      padding-right: 2%;
+    }
+
+    .second-column {
+      float: left;
+      width: 49%;
+    }
+
+    /* Clear floats after the columns */
+    .row::after {
+      content: "";
+      display: block;
+      clear: both;
     }
 
     @media screen and (orientation : landscape) {
@@ -172,7 +202,6 @@
     }
     }
 
-    
 		/* Don't display info block when window is very small */
 		@media screen and (max-height: 200px) {
 
@@ -188,7 +217,6 @@
     }
     }
     
-
   </style>
 </head>
 
@@ -200,20 +228,38 @@
   </header>
   
   <div class="grid-container">
-  <div id='map'></div>
-  <div id="legend_meta">
-  <div id="content">
+    <div id='map'></div>
+    <div id="legend_meta">
+      <div id="content"></div>
+    </div>
   </div>
+    <div class="first-column">
+      <p>
+        <b>Soil Classification is an important indicator that where a farmers can grow their crops properly.</b>
+        <ul>
+          <li>Weighted Average Rate: Values are calculated the average rate of non-irrigated soil weighted by the acres of classified rate.</li>
+          <li>Standard Deviation: Values are the standard deviation by the classfied rate, which describes the variation of soil quality.</li>
+        </ul>
+    </div>
+    <div class="second-column">
+  </p>
+  <img src="images/soil.jpg" alt="soil classification" class="img-fill">
+  <div class="caption">Soil Classification: Class 1 through 8</div>
   </div>
   <p>
-    Soil Classification is an important indicator that where a farmers can grow their crops properly.
-  </p>
-  </div>
+
   
 
-  <footer>
-
+<footer>
+  <p>
+    <b>Source and Useful Link</b>
+    <ul>
+      <li>Soil Survey: USDA National Resources Conservation Service(<a href="https://websoilsurvey.sc.egov.usda.gov/App/HomePage.htm" target="balnk">NRCS</a>)</li>
+    </ul>
+  </p>
+  <p><b>Map is authorized by <a href="https://github.com/HoyeonJeong" target="blank">Hoyeon Jeong</a></b></p>
 </footer>
+
 </section>
   <!-- Load scripts using Subresource Integrity (SRI) is a security feature 
       that enables browsers to verify that resources they fetch (from a CDN) 
@@ -253,7 +299,7 @@
       onEachFeature: function (feature, layer) {
         var props=feature.properties;
         var popup=`<p><b>${props.name} county</b></p> 
-        Weighted Average Rate:${props["weight_rate"]} rate <br>
+        Weighted Average Rate:${props["weight_rate"]} <br>
         Stadard Deviation: ${props["sd_rate"]}`
         if (L.Browser.mobile) {
             layer.bindPopup(popup);
@@ -336,7 +382,7 @@
     var legend=L.control({position: 'topleft'});
     legend.onAdd=function () {
       var div=L.DomUtil.create('div', 'legend');
-      div.innerHTML="<h3>Soil Class</h3>"
+      div.innerHTML="<h3>Soil Class<br>(The lower, the better)</h3>"
       for (var i=0; i<breaks.length; i++) {
         var color=getColor(breaks[i][0], breaks);
         div.innerHTML+=`<span style="background:${color}"></span>
@@ -348,10 +394,8 @@
     legend.addTo(map);
   }
   
-
   var metacontent=
   `<h3>Soil Class</h3>
-    <b>The Lower, The Better</b>
       <ul>
         <li>Class 1: Soils have few limitations that restrict their use.</li>
         <li>Class 2: Soils have moderate limitations that reduce the choice of plants or that require moderate conservation practices.</li>
