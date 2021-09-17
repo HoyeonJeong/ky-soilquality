@@ -155,6 +155,11 @@
       margin: 10px 0px;
     }
 
+    .img-fill-side {
+      width: 225px;
+      height: 225px;
+    }
+
         /* Use float property to make two-column layout */
     .first-column {
       float: left;
@@ -240,21 +245,29 @@
           <li>Weighted Average Rate: Values are calculated the average rate of non-irrigated soil weighted by the acres of classified rate.</li>
           <li>Standard Deviation: Values are the standard deviation by the classfied rate, which describes the variation of soil quality.</li>
         </ul>
-
+      </p>
+      <p>
+      <b>Soil Type is a main determinant of soil quality and generally categorized by 4 types</b>
+      <ul>
+        <li>Clay: fine-grained soil. Water moves slowly through clay.</li>
+        <li>Sand: A granular soil. Large pores, faster ground absortion.</li>
+        <li>Silt: Intermediate between fine sand and clay. Sensitive to moisture content.</li>
+        <li>Laom: A combination of beneficial properties of sand, silt, and clay.</li>
+    </ul>
+    </p>
+    <p><b>Map authorized Hoyeon Jeong</b></p>
+      <p>Source: 
+      <ul>  
+      <li>USDA National Resources Conservation Service (<a href="https://www.nrcs.usda.gov/wps/portal/nrcs/site/national/home/" target="blank">NRCS</a>)</li>
+      <li><a href="https://www.boughton.co.uk/products/topsoils/soil-types/" target="blank">Boughton</a></li>
+      </p>
+      </ul>
     </div>
     <div class="second-column">
-  </p>
-  <img src="images/soil.jpg" alt="soil classification" class="img-fill">
-  <div class="caption">Soil Classification: Class 1 through 8</div>
-  </div>
-</section>
-
-<footer>
-  <p>
-  <b>Source: Soil Survey, USDA National Resources Conservation Service(<a href="https://websoilsurvey.sc.egov.usda.gov/App/HomePage.htm" target="balnk">NRCS</a>)<br>
-  Map is authorized by <a href="https://github.com/HoyeonJeong" target="blank">Hoyeon Jeong</a>(Link to my Github profile)</b>
-  </p>
-</footer>
+      <img src="images/soil.jpg" alt="soil classification" class="img-fill">
+      <div class="caption">Soil Classification: Class 1 through 8(source: USDA NRCS)</div>
+    </div>
+  </section>
 
   <!-- Load scripts using Subresource Integrity (SRI) is a security feature 
       that enables browsers to verify that resources they fetch (from a CDN) 
@@ -389,20 +402,20 @@
     legend.addTo(map);
   }
   
-  var metacontent=
-  `<h3>Soil Class</h3>
-      <ul>
-        <li>Class 1: Soils have few limitations that restrict their use.</li>
-        <li>Class 2: Soils have moderate limitations that reduce the choice of plants or that require moderate conservation practices.</li>
-        <li>Class 3: Soils have severe limitations that reduce the choice of plants or that require special conservation practices, or both.</li>
-        <li>Class 4: Soils have very severe limitations that reduce the choice of plants or that require very careful management, or both.</li>
-        <li>Class 5: Soils are subject to little or no erosion but have other limitations, impractical to remove, that restrict their use mainly to pasture, rangeland, forestland, or wildlife habitat.</li>
-        <li>Class 6: Soils have severe limitations that make them generally unsuitable for cultivation and that restrict their use mainly to pasture, rangeland, forestland, or wildlife habitat.</li>
-        <li>Class 7: Soils have very severe limitations that make them unsuitable for cultivation and that restrict their use mainly to grazing, forestland, or wildlife habitat.</li>
-        <li>Class 8: Soils and miscellaneous areas have limitations that preclude commercial plant production and that restrict their use to recreational purposes, wildlife habitat, watershed, or esthetic purposes.</li>
-      </ul>
-      Source: USDA, National Resources Conservation Service`
-  content.innerHTML=metacontent
+  const soiltype = ["sand", "clay", "silt", "loam"],
+        soilimage = ["images/sand.jpg", "images/clay.jpg", "images/silt.jpg", "images/loam.jpg"];
+
+  for (var i=0; i<soiltype.length; i++) {
+    var soiltypeimage=`<hr><h3><div>${soiltype[i]}</h3><img src='${soilimage[i]}' class='img-fill-side'><br>`
+    content.innerHTML+=soiltypeimage
+    console.log(soiltypeimage)
+  };
+  
+  
+
+
+
+  
 
   </script>
 
