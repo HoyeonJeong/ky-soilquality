@@ -1,0 +1,8 @@
+
+{
+    "title": "Kentucky Soil Quality (Classification) by County",
+    "info": "Visualize the average level of soil quality by counties in KY",
+    "coordinates": [37.8, -85.8],
+    "author": "Hoyeon Jeong", 
+    "link": "https://hoyeonjeong.github.io/ky-soilquality/" 
+}   
