@@ -243,16 +243,16 @@
         <b>Soil Classification is an important indicator that where a farmers can grow their crops properly.</b>
         <ul>
           <li>Weighted Average Rate: Values are calculated the average rate of non-irrigated soil weighted by the acres of classified rate.</li>
-          <li>Standard Deviation: Values are the standard deviation by the classfied rate, which describes the variation of soil quality.</li>
+          <li>Standard Deviation: Values are the standard deviation by the classified rate, which describes the variation of soil quality.</li>
         </ul>
       </p>
       <p>
       <b>Soil Type is a main determinant of soil quality and generally categorized by 4 types</b>
       <ul>
         <li>Clay: fine-grained soil. Water moves slowly through clay.</li>
-        <li>Sand: A granular soil. Large pores, faster ground absortion.</li>
+        <li>Sand: A granular soil. Large pores, faster ground absorbtion.</li>
         <li>Silt: Intermediate between fine sand and clay. Sensitive to moisture content.</li>
-        <li>Laom: A combination of beneficial properties of sand, silt, and clay.</li>
+        <li>Loam: A combination of beneficial properties of sand, silt, and clay.</li>
     </ul>
     </p>
     <p><b>Map authorized Hoyeon Jeong</b></p>
@@ -372,17 +372,34 @@
     return breaks;
   }
 
+  // function getColor(d, breaks) {
+  //         if (d<=(breaks[0][1])) {
+  //           return '#a6611a';
+  //         } else if (d<=(breaks[1][1])) {
+  //           return '#dfc27d';
+  //         } else if (d<=(breaks[2][1])) {
+  //           return '#f4a582';
+  //         } else if (d<=(breaks[3][1])) {
+  //           return '#bababa';
+  //         } else if (d<=(breaks[4][1])) {
+  //           return '#404040'
+  //         }
+  //       };
+
+  // Example using a gradient color scheme
+  // values represent a measurement and are ranked
+  // You could use a brown single-hue gradient to better fit the theme.
   function getColor(d, breaks) {
           if (d<=(breaks[0][1])) {
-            return '#a6611a';
+            return '#9400d3';
           } else if (d<=(breaks[1][1])) {
-            return '#dfc27d';
+            return '#b259dd';
           } else if (d<=(breaks[2][1])) {
-            return '#f4a582';
+            return '#cc8fe6';
           } else if (d<=(breaks[3][1])) {
-            return '#bababa';
+            return '#e2c2ee';
           } else if (d<=(breaks[4][1])) {
-            return '#404040'
+            return '#f5f5f5'
           }
         };
   
